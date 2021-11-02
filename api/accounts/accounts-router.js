@@ -12,7 +12,12 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:id', md.checkAccountId , async  (req, res, next) => {
-   res.json(req.accounts)
+  try {
+    const account = await Account.getById(req.params.id)
+    res.json(account)
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.post('/', 
@@ -33,10 +38,9 @@ router.put('/:id',
  md.checkAccountId,
  md.checkAccountPayload,
   async (req, res, next) => {
-    const updated = await Account.updateById(req.params.id, req.body)
-    res.json(updated)
- try {
-   res.json('update account')
+    try {
+   const updated = await Account.updateById(req.params.id, req.body)
+   res.json(updated)
  } catch (error) {
    next(error)
  }
